@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Students (Pydantic)</title>
+  <style>
+    body { font-family: sans-serif; max-width: 550px; margin: 40px auto; }
+    input, button { padding: 6px; margin: 4px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    td, th { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    #msg { color: green; }
+  </style>
+</head>
+<body>
+  <h2>Student Manager</h2>
+
+  <input id="name" placeholder="Name">
+  <input id="age" type="number" placeholder="Age">
+  <input id="department" placeholder="Department">
+  <button onclick="addStudent()">Add</button>
+  <p id="msg"></p>
+
+  <table>
+    <thead><tr><th>Name</th><th>Age</th><th>Department</th></tr></thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <script>
+    // GET: show all students
+    async function load() {
+      const res = await fetch("/students");
+      const students = await res.json();
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      students.forEach(s => {
+        const row = list.insertRow();
+        row.insertCell().textContent = s.name;
+        row.insertCell().textContent = s.age;
+        row.insertCell().textContent = s.department;
+      });
+    }
+
+    // POST: send the student as a JSON body (this is what Pydantic expects)
+    async function addStudent() {
+      const student = {
+        name: document.getElementById("name").value,
+        age: Number(document.getElementById("age").value),
+        department: document.getElementById("department").value
+      };
+      const res = await fetch("/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student)
+      });
+      const data = await res.json();
+      const msg = document.getElementById("msg");
+      if (res.ok) {
+        msg.style.color = "green";
+        msg.textContent = data.message;
+        document.getElementById("name").value = "";
+        document.getElementById("age").value = "";
+        document.getElementById("department").value = "";
+        load();
+      } else {
+        msg.style.color = "red";
+        msg.textContent = "Error: please fill all fields correctly";
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+steps to create python venv
+1.python3 -m venv venv-use this command
+
+steps to run an fastapi program
+1.uvicorn filename:app --reload
+filename->name the fastapi
+--reload means automatically restart the FastAPI server whenever you modify and save your Python code.
