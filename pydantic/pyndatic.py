@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel
@@ -33,7 +34,7 @@ def get_students():
 #frontend page
 @app.get("/ui")
 def frontend():
-    return FileResponse("pydantic_ui.html")
+    return FileResponse(Path(__file__).parent / "pydantic_ui.html")
 
 #/doc (typo) -> /docs
 @app.get("/doc", include_in_schema=False)

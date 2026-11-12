@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 app = FastAPI()
@@ -36,4 +37,4 @@ def delete_student(id: int):
 #frontend
 @app.get("/ui")
 def frontend():
-    return FileResponse("index.html")
+    return FileResponse(Path(__file__).parent / "index.html")
