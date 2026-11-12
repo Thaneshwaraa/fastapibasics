@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Students</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 40px auto; }
+    input, button { padding: 6px; margin: 4px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    td, th { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h2>Student Manager</h2>
+
+  <input id="name" placeholder="Name">
+  <input id="age" type="number" placeholder="Age">
+  <button onclick="save()">Save</button>
+  <input type="hidden" id="editId">
+
+  <table>
+    <thead><tr><th>#</th><th>Name</th><th>Age</th><th>Actions</th></tr></thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <script>
+    let students = [];
+
+    // READ: get all students and show them in the table
+    async function load() {
+      const res = await fetch("/students");
+      students = await res.json();
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      students.forEach((s, i) => {
+        const row = list.insertRow();
+        row.insertCell().textContent = i;
+        row.insertCell().textContent = s.name;
+        row.insertCell().textContent = s.age;
+        row.insertCell().innerHTML =
+          `<button onclick="edit(${i})">Edit</button>
+           <button onclick="del(${i})">Delete</button>`;
+      });
+    }
+
+    // CREATE or UPDATE
+    async function save() {
+      const name = encodeURIComponent(document.getElementById("name").value);
+      const age = document.getElementById("age").value;
+      const id = document.getElementById("editId").value;
+
+      if (id === "") {
+        await fetch(`/add?name=${name}&age=${age}`, { method: "POST" });
+      } else {
+        await fetch(`/update/${id}?name=${name}&age=${age}`, { method: "PUT" });
+      }
+      document.getElementById("name").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("editId").value = "";
+      load();
+    }
+
+    // Fill the form so you can edit a student
+    function edit(id) {
+      document.getElementById("editId").value = id;
+      document.getElementById("name").value = students[id].name;
+      document.getElementById("age").value = students[id].age;
+    }
+
+    // DELETE
+    async function del(id) {
+      await fetch(`/delete/${id}`, { method: "DELETE" });
+      load();
+    }
+
+    load();
+  </script>
+</body>
+</html>

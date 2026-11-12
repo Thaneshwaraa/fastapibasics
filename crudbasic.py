@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 app = FastAPI()
 
 students =[]
@@ -31,3 +32,8 @@ def update_student(id:int,name:str,age:int):
 def delete_student(id: int):
     students.pop(id)
     return {"message":"student deleted"}
+
+#frontend
+@app.get("/ui")
+def frontend():
+    return FileResponse("index.html")
