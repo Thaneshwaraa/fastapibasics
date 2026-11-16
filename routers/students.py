@@ -1,19 +1,14 @@
+
 from fastapi import APIRouter
-from pydantic import BaseModel
 
 router = APIRouter()
 
-class Student(BaseModel):
-    name: str
-    age: int
-
-students = []
-
+# GET - View students
 @router.get("/")
 def get_students():
-    return students
+    return {"message": "All students"}
 
+# POST - Add student
 @router.post("/")
-def add_student(student: Student):
-    students.append(student)
-    return {"message": "student added", "student": student}
+def add_student():
+    return {"message": "Student added"}

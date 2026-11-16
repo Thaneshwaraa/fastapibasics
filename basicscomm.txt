@@ -5,3 +5,7 @@ steps to run an fastapi program
 1.uvicorn filename:app --reload
 filename->name the fastapi
 --reload means automatically restart the FastAPI server whenever you modify and save your Python code.
+SWAGGER 
+Prad-production term
+redis-learn
+groq
