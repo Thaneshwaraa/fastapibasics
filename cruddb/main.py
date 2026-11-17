@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, Depends
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import Session
@@ -10,7 +9,7 @@ app = FastAPI()
 
 # Database Model
 class Car(Base):
-    __tablename__ = "crud_cars"
+    __tablename__ = "cars"
 
     id = Column(Integer, primary_key=True)
     brand = Column(String)
